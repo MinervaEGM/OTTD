@@ -1,5 +1,5 @@
 
-# Project Title
+# Experimental Replication and Further Analysis of OTTD Based on 'Target Networks and Over-parameterization Stabilize Off-policy Bootstrapping' 
 
 This repository contains all the scripts used to replicate the experiments described on [Target Networks and Over-parameterization Stabilize Off-policy Bootstrapping with Function Approximation](https://arxiv.org/pdf/2405.21043) by Che et. al. and an additional experiment to assess the impact of varying step size on TD target.
 
