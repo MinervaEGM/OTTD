@@ -55,8 +55,10 @@ def TD(eta=0.5,alpha=0.8):
     values.append((M @ theta).T @ D_k @ (M @ theta))
     # N = 0.5*P @ M
     # N = N[:-1,:]
+    print("TD Started")
     while steps<50000:
         steps+=1
+        print(steps)
         # theta -= eta * np.transpose(M)@ D_k@(M-gamma * N) @ theta
         # theta -= eta * np.transpose(part_M) @ D_k @ part_M @ theta - eta * np.transpose(part_M) @ D_k @ (gamma * N) @ theta_targ
         theta -= eta * np.transpose(M) @ D_k @ M @ theta - eta * np.transpose(M) @ D_k @ ( gamma * N) @ theta_targ
@@ -67,6 +69,7 @@ def TD(eta=0.5,alpha=0.8):
     # plt.plot(range(len(parameters)),parameters)
     # plt.plot(range(len(values)), values)
     # plt.show()
+    print("TD finished")
     return parameters, values
 
 def TD_target(eta=0.5,checkpoint=10):
@@ -78,13 +81,16 @@ def TD_target(eta=0.5,checkpoint=10):
     alpha=1
     parameters.append(theta[0])
     values.append((M@theta).T@D_k@(M@theta))
+    print("TD_target Started")
     while steps<50000:
         if steps%checkpoint==0:
             theta_target = (1-alpha)*theta_target + alpha*np.copy(theta)
         steps+=1
+        print(steps)
         theta -= eta * np.transpose(M)@ D_k@M @ theta - eta *np.transpose(M)@ D_k@ (gamma*N) @ theta_target
         parameters.append(theta[0])
         values.append((M@theta).T@D_k@(M@theta))
+    print("TD target finished")
     # plt.plot(range(len(parameters)),parameters)
     # plt.plot(range(len(values)), values)
     # plt.show()
@@ -97,14 +103,17 @@ def RM(eta=0.5):
     theta = np.array([1, 1, 1, 1, 1, 1, 1, 10]).astype(np.float32)
     parameters.append(theta[0])
     values.append((M@theta).T@D_k@(M@theta))
+    print("RM Started")
     while steps<50000:
         steps+=1
+        print(steps)
         theta -= eta * np.transpose(M-gamma * N)@ D_k@(M-gamma * N) @ theta
         parameters.append(theta[0])
         values.append((M@theta).T@D_k@(M@theta))
     # plt.plot(range(len(parameters)),parameters)
     # plt.plot(range(len(values)), values)
     # plt.show()
+    print("RM finished")
     return parameters, values
 
 def GTD(eta=0.5,alpha=0.5):
@@ -115,8 +124,10 @@ def GTD(eta=0.5,alpha=0.5):
     w = np.array([1, 1, 1, 1, 1, 1, 1, 10]).astype(np.float32)
     parameters.append(theta[0])
     values.append((M@theta).T@D_k@(M@theta))
+    print("GTD Started")
     while steps<50000:
         steps+=1
+        print(steps)
         theta += eta *(M-gamma * N).T@ D_k@M @w
         # theta -= eta * M.T@ D_k @(M - gamma * N)@ theta + eta* gamma *N.T@D_k@M@w
         w -= alpha * M.T @ D_k @ (M @ theta - gamma * N @ theta + M @ w)
@@ -125,6 +136,7 @@ def GTD(eta=0.5,alpha=0.5):
     # plt.plot(range(len(parameters)),parameters)
     # plt.plot(range(len(values)), values)
     # plt.show()
+    print("GTD finished")
     return parameters, values
 
 def TDC(eta=0.5,alpha=0.5):
@@ -135,8 +147,10 @@ def TDC(eta=0.5,alpha=0.5):
     w = np.array([1, 1, 1, 1, 1, 1, 1, 10]).astype(np.float32)
     parameters.append(theta[0])
     values.append((M@theta).T@D_k@(M@theta))
+    print("TDC Started")
     while steps<50000:
         steps+=1
+        print(steps)
         # theta += eta *(M-gamma * N).T@ D_k@M @w
         theta -= eta * M.T@ D_k @(M - gamma * N)@ theta + eta* gamma *N.T@D_k@M@w
         w -= alpha * M.T @ D_k @ (M @ theta - gamma * N @ theta + M @ w)
@@ -145,6 +159,7 @@ def TDC(eta=0.5,alpha=0.5):
     # plt.plot(range(len(parameters)),parameters)
     # plt.plot(range(len(values)), values)
     # plt.show()
+    print("TDC finished")
     return parameters, values
 
 def Baird_RM(eta=0.5):
@@ -154,8 +169,10 @@ def Baird_RM(eta=0.5):
     theta = np.array([1, 1, 1, 1, 1, 1, 1, 10]).astype(np.float32)
     parameters.append(theta[0])
     values.append((M@theta).T@D_k@(M@theta))
+    print("Baird RM Started")
     while steps<50000:
         steps+=1
+        print(steps)
         RM_delta =  eta * np.transpose(M-gamma * N)@ D_k@(M-gamma * N) @ theta
         TD_delta = eta * np.transpose(M) @ D_k @ (M - gamma * N) @ theta
         if np.dot(RM_delta,TD_delta)-np.dot(RM_delta,RM_delta)==0:
@@ -168,6 +185,7 @@ def Baird_RM(eta=0.5):
     # plt.plot(range(len(parameters)),parameters)
     # plt.plot(range(len(values)), values)
     # plt.show()
+    print("Baird RM finished")
     return parameters, values
 
 def RM_target(eta=0.1):
@@ -181,15 +199,18 @@ def RM_target(eta=0.1):
     checkpoint = 3
     alpha = 1
     while steps<50000:
+        print("RM target started")
         if steps % checkpoint == 0:
             theta_target = (1 - alpha) * theta_target + alpha * theta
         steps += 1
+        print(steps)
         theta -= eta * np.transpose(M - gamma * N) @ D_k @ (M - gamma * N) @ theta
         parameters.append(theta[0])
         values.append(np.max(np.abs(M@theta)))
     # plt.plot(range(len(parameters)),parameters)
     # plt.plot(range(len(values)), values)
     # plt.show()
+    print("RM target finished")
     return parameters, values
 
 def tune_hyper_param():
